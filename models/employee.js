@@ -33,16 +33,27 @@ const employeeSchema = new mongoose.Schema({
         type: Boolean,
         required: true
     },
-    role: {
-        type: String,
-        required: true
-    },
     address: {
         street: String,
         city: String,
         state: String,
         pincode: String,
     },
+    joinedDate: {
+        type: Date,
+        required: true,
+        default: Date.now
+    },
+    organization: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Organization',
+    },
+    projects: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Project',
+        },
+    ],
 })
 
 module.exports = mongoose.model('Employee', employeeSchema)

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
-const ownerSchema = new mongoose.Schema({
-    ownerId: {
+const managerSchema = new mongoose.Schema({
+    managerId: {
         type: String,
         required: true
     },
@@ -25,18 +25,31 @@ const ownerSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    designation: {
+        type: String,
+        required: true
+    },    
     address: {
         street: String,
         city: String,
         state: String,
         pincode: String,
     },
-    // organizations: [
-    //     {
-    //         type: mongoose.Schema.Types.ObjectId,
-    //         ref: 'Organization',
-    //     },
-    // ],
+    joinedDate: {
+        type: Date,
+        required: true,
+        default: Date.now
+    },
+    organization: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Organization',
+    },
+    projects: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Project',
+        },
+    ],
 })
 
-module.exports = mongoose.model('Owner', ownerSchema)
+module.exports = mongoose.model('Manager', managerSchema)
