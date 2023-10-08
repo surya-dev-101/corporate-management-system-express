@@ -9,6 +9,8 @@ const ownerRouter = require("./routers/ownerRouter")
 const organizationRouter = require("./routers/organizationRouter")
 const projectRouter =  require("./routers/projectRouter")
 const loginRouter = require("./routers/loginRouter")
+const managerRouter = require("./routers/managerRouter")
+const employeeRouter = require("./routers/employeeRouter")
 
 dotenv.config();
 
@@ -29,6 +31,8 @@ app.use("/login", loginRouter);
 app.use("/owner", ownerRouter); 
 app.use("/project", projectRouter);
 app.use("/organization", organizationRouter);
+app.use("/manager", managerRouter);
+app.use("/employee", employeeRouter);
 
 app.listen(port, () => {
     console.log(`Server started and listening on port: ${port}`);

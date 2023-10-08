@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const employeeSchema = new mongoose.Schema({
     employeeId: {
         type: String,
-        required: true
+        unique: true
     },
     firstName: {
         type: String,
@@ -55,5 +55,26 @@ const employeeSchema = new mongoose.Schema({
         },
     ],
 })
+
+employeeSchema.pre("save", async function (next) {
+    if (!this.employeeId) {
+        const currentYear = new Date().getFullYear().toString();
+        const lastEmp = await this.constructor.findOne(
+            { employeeId: new RegExp(`^EMP${currentYear}\\d{3}$`) },
+            { employeeId: 1 },
+            { sort: { createdAt: -1 } }
+        );
+
+        if (lastEmp) {
+            const lastNumber = parseInt(lastEmp.employeeId.slice(-3));
+            this.employeeId = `EMP${currentYear}${(lastNumber + 1)
+                .toString()
+                .padStart(3, "0")}`;
+        } else {
+            this.employeeId = `EMP${currentYear}001`;
+        }
+    }
+    next();
+});
 
 module.exports = mongoose.model('Employee', employeeSchema)

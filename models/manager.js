@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const managerSchema = new mongoose.Schema({
     managerId: {
         type: String,
-        required: true
+        unique: true
     },
     firstName: {
         type: String,
@@ -51,5 +51,26 @@ const managerSchema = new mongoose.Schema({
         },
     ],
 })
+
+managerSchema.pre("save", async function (next) {
+    if (!this.managerId) {
+        const currentYear = new Date().getFullYear().toString();
+        const lastMngr = await this.constructor.findOne(
+            { managerId: new RegExp(`^MGR${currentYear}\\d{3}$`) },
+            { managerId: 1 },
+            { sort: { createdAt: -1 } }
+        );
+
+        if (lastMngr) {
+            const lastNumber = parseInt(lastMngr.managerId.slice(-3));
+            this.managerId = `MGR${currentYear}${(lastNumber + 1)
+                .toString()
+                .padStart(3, "0")}`;
+        } else {
+            this.managerId = `MGR${currentYear}001`;
+        }
+    }
+    next();
+});
 
 module.exports = mongoose.model('Manager', managerSchema)

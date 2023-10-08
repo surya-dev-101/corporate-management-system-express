@@ -27,7 +27,7 @@ projectSchema.pre("save", async function (next) {
         );
 
         if (lastPro) {
-            const lastNumber = parseInt(lastPrp.projectId.slice(-3));
+            const lastNumber = parseInt(lastPro.projectId.slice(-3));
             this.projectId = `PRO${currentYear}${(lastNumber + 1)
                 .toString()
                 .padStart(3, "0")}`;
