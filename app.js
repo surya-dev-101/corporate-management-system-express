@@ -5,6 +5,9 @@ const app = express();
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const ownerRouter = require("./routers/ownerRouter")
+const organizationRouter = require("./routers/organizationRouter")
+const projectRouter =  require("./routers/projectRouter")
 
 dotenv.config();
 
@@ -20,12 +23,10 @@ mongoose.connect(process.env.MONGODB_URI, {
 });
 
 app.use(cors());
-
 app.use(express.json());
-
-// const userRoute = require("./routes/user");
-
-// app.use("/user", userRoute); 
+app.use("/owner", ownerRouter); 
+app.use("/organization", organizationRouter);
+app.use("/project", projectRouter);
 
 app.listen(port, () => {
     console.log(`Server started and listening on port: ${port}`);
