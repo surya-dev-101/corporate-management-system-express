@@ -4,12 +4,12 @@ const express = require("express");
 const router = express.Router();
 const Owner = require("../models/owner");
 const bcrypt = require('bcrypt');
-
+const Login = require("../models/login");
 
 // get all owners
 router.get("/list", async (req, res) => {
     try {
-        const owners = await Owner.find().select("-password");        
+        const owners = await Owner.find().select("-password");
         res.status(200).json({ data: owners, message: "List of owners" });
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -32,6 +32,8 @@ router.post("/registration", async (req, res) => {
             const hashedPassword = await bcrypt.hash(owner.password, saltRounds);
             owner.password = hashedPassword;
             console.log("owner: " + owner);
+            const login = new Login({ email: owner.email, password: owner.password, role: "owner" });
+            await login.save();
             await owner.save();
             res.status(201).json({ data: owner, message: "Owner created successfully" });
         }

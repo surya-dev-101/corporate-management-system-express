@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const Organization = require("../models/organization");
+const authMiddleware = require("../middleware/authMiddleware");
 
 // get all owners
 router.get("/list", async (req, res) => {
     try {
+        let user = req.user;
         const organizations = await Organization.find();
         res.status(200).json({ data: organizations, message: "List of organizations" });
     } catch (err) {
