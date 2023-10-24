@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const Employee = require("../models/employee");
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const Login = require("../models/login");
 
 router.get("/list", async (req, res) => {

@@ -1,0 +1,10 @@
+[build]
+  functions = "functions"
+
+[dev]
+  publish = "dist"
+
+[[redirects]]
+  to="/.netlify/functions/app/:splat"
+  from="/*"
+  status=200
