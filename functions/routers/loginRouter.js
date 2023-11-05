@@ -9,6 +9,7 @@ const Manager = require("../models/manager");
 const Employee = require("../models/employee");
 const Organization = require("../models/organization");
 const nodemailer = require("nodemailer");
+const cors = require("cors");
 
 
 function generateOtp() {
@@ -130,51 +131,6 @@ router.post("/update-password", async (req, res) => {
         }
     }
     catch (err) {
-        res.send(err)
-    }
-})
-
-router.post("/request-otp", async (req, res) => {
-    try {
-        const { email, role } = req.body;
-        let otp = generateOtp();
-        console.log(otp);
-        const login = await Login.findOne({ email: email });
-        if (login != null) {
-            const saltRounds = 10;
-            const hashedOtp = await bcrypt.hash(otp.toString(), saltRounds);
-            login.otp = hashedOtp;
-            await login.save();
-
-            if (role == "owner") {
-                const owr = await Owner.findOne({ email: email })
-                if (owr != null) {
-                    await sendEmail(email, otp);
-                    res.status(200).json({ message: `OTP sent to ${email}`, otp: otp })
-                } else {
-                    res.status(404).json({ message: `${role} not found with email: ${email}` })
-                }
-            }
-            else if (role == "manager") {
-                const mgr = await Manager.findOne({ email: email })
-                if (mgr != null) {
-                    await sendEmail(email, otp);
-                    res.status(200).json({ message: `OTP sent to ${email}`, otp: otp })
-                } else {
-                    res.status(404).json({ message: `${role} not found with email: ${email}` })
-                }
-            }
-            else if (role == "employee") {
-                const emp = await Employee.findOne({ email: email })
-                if (emp != null) {
-                    await sendEmail(email, otp);
-                    res.status(200).json({ message: `OTP sent to ${email}`, otp: otp })
-                } else {
-                    res.status(404).json({ message: `${role} not found with email: ${email}` })
-                }
-            }
-        }
-    } catch (err) {
         res.send(err)
     }
 })

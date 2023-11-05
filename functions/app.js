@@ -2,6 +2,7 @@
 
 const express = require("express");
 const serverless = require("serverless-http");
+const bodyParser = require("body-parser");
 const app = express();
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
@@ -12,10 +13,11 @@ const projectRouter = require("./routers/projectRouter")
 const loginRouter = require("./routers/loginRouter")
 const managerRouter = require("./routers/managerRouter")
 const employeeRouter = require("./routers/employeeRouter")
+const authRouter = require("./routers/authRouter")
 
 dotenv.config();
 
-const port = 8080;
+const port = 8000;
 const mongoURI = process.env.MONGODB_URI;
 console.log("mongouri:" + mongoURI);
 
@@ -28,8 +30,10 @@ mongoose.connect("mongodb+srv://root:oim4ij6cjaBcI7Kq@cms.3whvfgs.mongodb.net/cm
     console.log("Failed to connect to cloud mongodb database: " + err);
 });
 
+
 app.use(cors());
 app.use(express.json());
+app.use("/auth", authRouter);
 app.use("/login", loginRouter);
 app.use("/owner", ownerRouter);
 app.use("/project", projectRouter);
